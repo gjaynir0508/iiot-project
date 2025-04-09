@@ -1,0 +1,21 @@
+# MQTT client for sensor simulator
+paho-mqtt
+
+# Streamlit dashboard
+streamlit
+
+# FastAPI server for model predictions
+fastapi
+uvicorn
+
+# Deep Learning framework
+tensorflow
+
+# Data processing
+pandas
+numpy
+scikit-learn
+
+# Optional: for plots and data visualization
+matplotlib
+seaborn
