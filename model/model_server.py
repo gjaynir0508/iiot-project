@@ -1,3 +1,5 @@
+from sklearn.preprocessing import MinMaxScaler
+import pandas as pd
 from fastapi import FastAPI, Request
 from pydantic import BaseModel
 import numpy as np
@@ -14,10 +16,22 @@ app = FastAPI()
 model = tf.keras.models.load_model(
     "./model/lstm_fd001.keras", custom_objects={'Orthogonal': Orthogonal})
 
+cols = ['unit', 'cycle', 'op_setting_1', 'op_setting_2',
+        'op_setting_3'] + [f'sensor_{i}' for i in range(1, 22)]
+features = ['cycle', 'op_setting_1', 'op_setting_2', 'op_setting_3'] + [
+    'sensor_2', 'sensor_3', 'sensor_4', 'sensor_7', 'sensor_8',
+    'sensor_11', 'sensor_15', 'sensor_17', 'sensor_20', 'sensor_21'
+]
+train_df = pd.read_csv("./CMAPSSData/train_FD001.txt", sep=' ', header=None)
+train_df.drop(columns=[26, 27], inplace=True)
+train_df.columns = cols
+scaler = MinMaxScaler()
+scaler.fit_transform(train_df[features])
+
 # Define input shape expected by model
 SEQ_LENGTH = 50
-N_FEATURES = 13  # number of sensors you're using
-# TODO: Update this to 14 once the model is trained with the new data
+N_FEATURES = 14  # number of sensors you're using
+# TODO Complete: Update this to 14 once the model is trained with the new data
 
 # Define request schema
 
@@ -38,16 +52,21 @@ async def predict(data: SensorData):
     if seq.shape != (SEQ_LENGTH, N_FEATURES):
         return {"error": f"Expected shape ({SEQ_LENGTH}, {N_FEATURES}), got {seq.shape}"}
 
+    # Normalize the sequence using the same scaler used for training
+    seq = scaler.transform(seq)
+    # Reshape the sequence to match the input shape of the model
     seq = seq.reshape(1, SEQ_LENGTH, N_FEATURES)
 
     # Predict RUL
     prediction = model.predict(seq)
     rul = prediction[0][0]
+    # Inverse transform the prediction to get the actual RUL value
+    rul_actual = np.clip(np.expm1(rul), 0, 125)
 
     return {
         "unit_id": data.unit_id,
         "timestamp": data.timestamp,
-        "predicted_rul": float(rul)
+        "predicted_rul": float(rul_actual)
     }
 
 if __name__ == "__main__":

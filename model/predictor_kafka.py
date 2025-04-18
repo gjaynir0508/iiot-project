@@ -67,8 +67,8 @@ for msg in consumer:
                 f"[✗] Invalid cycle data. Skipping this cycle.")
             continue
 
-        # TODO: Remove below line. (removing the cycle number from the features until the model is updated)
-        cycle = cycle[1:]
+        # TODO Complete: Remove below line. (removing the cycle number from the features until the model is updated)
+        # cycle = cycle[1:]
         # Append cycle to buffer
         cycle_buffer.append(cycle)
 

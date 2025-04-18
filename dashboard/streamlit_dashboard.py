@@ -105,7 +105,9 @@ while True:
                 current_rul = rul_list[-1]['rul']
                 df_rul = pd.DataFrame(rul_list)
                 cols[0].metric(
-                    "Predicted RUL", f"{current_rul:.2f}", current_rul - rul_list[-2]['rul'] if len(rul_list) > 1 else None)
+                    "Predicted RUL", f"{current_rul:.2f}",
+                    # current_rul - rul_list[-2]['rul'] if len(rul_list) > 1 else None
+                )
                 with cols[0].expander("RUL Trend"):
                     df_rul_melted = df_rul.melt(
                         id_vars=["timestamp"], value_vars=["rul"], var_name="Metric", value_name="Value")
