@@ -1,6 +1,9 @@
 # MQTT client for sensor simulator
 paho-mqtt
 
+# Kafka client for streaming data to the dashboard
+kafka-python
+
 # Streamlit dashboard
 streamlit
 
