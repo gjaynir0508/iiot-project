@@ -17,14 +17,18 @@ simulator = SensorDataSimulator("./CMAPSSData/train_FD001.txt")
 # Publish simulated data
 try:
     while True:
-        sensor_data = simulator.get_sensor_data()
+        engine_id, sensor_data = simulator.get_sensor_data()
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+
         if sensor_data is None:
             print("Simulation complete.")
             break
 
-        payload = json.dumps({"unit_id": 1, "sensor_data": sensor_data})
+        payload = json.dumps(
+            {"unit_id": str(engine_id), "timestamp": timestamp, "sensor_data": sensor_data})
         client.publish(MQTT_TOPIC, payload)
-        print(f"Published: {payload}")
+        # Print first 150 chars of payload
+        print(f"Published: {payload[:120]} ...")
 
         time.sleep(1)  # Simulate 1-second interval between sensor reads
 

@@ -22,3 +22,5 @@ scikit-learn
 # Optional: for plots and data visualization
 matplotlib
 seaborn
+
+altair

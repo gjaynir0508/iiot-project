@@ -17,13 +17,17 @@ model = tf.keras.models.load_model(
 # Define input shape expected by model
 SEQ_LENGTH = 50
 N_FEATURES = 13  # number of sensors you're using
+# TODO: Update this to 14 once the model is trained with the new data
 
 # Define request schema
 
 
 class SensorData(BaseModel):
-    unit_id: int
-    sequence: list  # list of sensor readings, each is a list of floats
+    unit_id: str  # Unique identifier for the unit
+    timestamp: str  # ISO format string
+    # Assuming the sequence is a list of lists, each containing float values
+    # list of sensor readings, each is a list of floats
+    sequence: list[list[float]]
 
 
 @app.post("/predict")
@@ -42,6 +46,7 @@ async def predict(data: SensorData):
 
     return {
         "unit_id": data.unit_id,
+        "timestamp": data.timestamp,
         "predicted_rul": float(rul)
     }
 

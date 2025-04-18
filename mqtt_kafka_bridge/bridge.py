@@ -28,7 +28,7 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     try:
         payload = json.loads(msg.payload.decode('utf-8'))
-        print(f"[MQTT] Received: {payload}")
+        print(f"[MQTT] Received: {str(payload)[:115]}...")
         producer.send(KAFKA_TOPIC, value=payload)
         print(f"[Kafka] Sent to topic '{KAFKA_TOPIC}'")
     except Exception as e:

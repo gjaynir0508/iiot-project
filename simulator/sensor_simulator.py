@@ -35,7 +35,8 @@ class SensorDataSimulator:
 
         self.current_cycle += 1
 
-        return cycle_data.drop(['engine_id', 'cycle'], axis=1).iloc[0].to_dict()
+        sensor_data = cycle_data.drop(['engine_id'], axis=1).iloc[0].to_dict()
+        return engine_id, sensor_data
 
 
 # Example usage
