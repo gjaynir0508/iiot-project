@@ -55,9 +55,9 @@ FEATURES = [
     'sensor_20',
     'sensor_21']
 
-for msg in consumer:
-    sensor_data = msg.value
-    try:
+try:
+    for msg in consumer:
+        sensor_data = msg.value
         uid = sensor_data.get("unit_id")
         cycle_buffer = cycle_buffers[uid]
         # Each message contains 1 cycle (1 timestep)
@@ -98,8 +98,11 @@ for msg in consumer:
                 print(
                     f"[✗] Error from inference server: {response.status_code}, {response.text}")
 
-    except Exception as e:
-        producer.flush()
-        print(f"[!] Exception while processing message: {e}")
+        time.sleep(0.1)  # Optional: throttle processing
 
-    time.sleep(0.1)  # Optional: throttle processing
+except KeyboardInterrupt:
+    producer.flush()
+    print("[!] Stopping the Prediction service...")
+except Exception as e:
+    producer.flush()
+    print(f"[!] Exception while processing message: {e}")

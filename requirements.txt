@@ -24,3 +24,5 @@ matplotlib
 seaborn
 
 altair
+bokeh==2.4.3
+plotly
