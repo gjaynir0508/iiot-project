@@ -2,7 +2,7 @@
 
 Submission for the course "Industrial Internet of Things" at Chaitanya Bharathi Institute of Technology, 2025.
 
-![sample](https://github.com/gjaynir0508/iiot-project/blob/b3e2cd884f07734d39861315a896bd78ec6adbfa/assets/sample.jpg)
+![image](https://github.com/user-attachments/assets/98c1f88c-5471-4ecd-9012-a64ef3c8db16)
 
 ## Team Members
 
