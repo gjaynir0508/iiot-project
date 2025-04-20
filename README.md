@@ -1,5 +1,25 @@
 # Predictive Maintenance
 
+Submission for the course "Industrial Internet of Things" at Chaitanya Bharathi Institute of Technology, 2025.
+
+![sample](assets/sample.png)
+
+## Team Members
+
+| Name | Roll No |
+| ---- | ------- |
+| C. Rithesh Reddy | 160122771034 |
+| G. Jayanth | 160122771041 |
+
+## Introduction
+
+This project is a predictive maintenance system that uses machine learning to predict equipment failures based on sensor data. The system consists of several components that work together to collect, process, and analyze sensor data in real-time.
+The system uses a Kafka broker to handle the data stream and an MQTT broker to collect data from sensors. The machine learning model is used to predict equipment failures based on the sensor data. The predictions are then sent to a Streamlit dashboard for visualization.
+
+## Architecture
+
+![architecture](assets/architecture.png)
+
 ## Instructions to run the code
 
 ### Requirements

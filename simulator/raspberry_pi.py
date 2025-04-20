@@ -1,7 +1,7 @@
 import time
 import json
 import paho.mqtt.client as mqtt
-from sensor_simulator import SensorDataSimulator
+from sensor_simulator_random_bounded import SensorDataSimulator
 
 MQTT_BROKER = "localhost"          # Or your MQTT broker IP
 MQTT_PORT = 1883
@@ -30,7 +30,7 @@ try:
         # Print first 150 chars of payload
         print(f"Published: {payload[:120]} ...")
 
-        time.sleep(1)  # Simulate 1-second interval between sensor reads
+        time.sleep(0.2)  # Simulate an interval between sensor reads
 
 except KeyboardInterrupt:
     print("Simulation stopped.")
