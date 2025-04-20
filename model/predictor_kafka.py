@@ -2,6 +2,7 @@ from kafka import KafkaConsumer, KafkaProducer
 import requests
 import json
 import time
+from collections import defaultdict, deque
 
 # Kafka setup
 SENSOR_TOPIC = 'sensor-data'
@@ -26,8 +27,10 @@ INFERENCE_URL = "http://localhost:8000/predict"
 
 print("Kafka RUL prediction service started...")
 
-# Buffer to hold the last 50 cycles (for the sliding window)
-cycle_buffer = []
+SEQ_LEN = 50  # Length of the sequence to send for prediction
+# Dictionary to hold the last 50 cycles for each unit_id
+# Buffers to hold the last 50 cycles (for the sliding window)
+cycle_buffers = defaultdict(lambda: deque(maxlen=SEQ_LEN))
 
 
 def publish_prediction(prediction_result):
@@ -55,6 +58,8 @@ FEATURES = [
 for msg in consumer:
     sensor_data = msg.value
     try:
+        uid = sensor_data.get("unit_id")
+        cycle_buffer = cycle_buffers[uid]
         # Each message contains 1 cycle (1 timestep)
         cycle = sensor_data.get("sensor_data")
         useful_features_only = [cycle[f] for f in FEATURES]
@@ -76,7 +81,7 @@ for msg in consumer:
         if len(cycle_buffer) >= 50:
             # Prepare the sequence for inference (50 cycles, each with 13 features)
             sequence_data = {
-                "unit_id": sensor_data["unit_id"], "timestamp": sensor_data["timestamp"], "sequence": cycle_buffer[-50:]}
+                "unit_id": sensor_data["unit_id"], "timestamp": sensor_data["timestamp"], "sequence": list(cycle_buffer)}
 
             # Print the first 100 characters of the sequence data
             print(str(sequence_data)[:120] + "...")
@@ -92,9 +97,6 @@ for msg in consumer:
             else:
                 print(
                     f"[✗] Error from inference server: {response.status_code}, {response.text}")
-
-            # Slide the window by 1 (remove the first cycle and add a new cycle in the next iteration)
-            cycle_buffer = cycle_buffer[1:]
 
     except Exception as e:
         producer.flush()
