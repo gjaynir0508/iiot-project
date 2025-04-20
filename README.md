@@ -18,7 +18,7 @@ The system uses a Kafka broker to handle the data stream and an MQTT broker to c
 
 ## Architecture
 
-![architecture](assets/architecture.png)
+![system_arch_flow](https://github.com/user-attachments/assets/1eebf5d5-3391-4673-9d7e-2264d5234fe2)
 
 ## Instructions to run the code
 
