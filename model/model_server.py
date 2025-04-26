@@ -10,23 +10,17 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.initializers import Orthogonal
 import uvicorn
 
+import pickle
+
 app = FastAPI()
 
 # Load model
 model = tf.keras.models.load_model(
     "./model/lstm_fd001.keras", custom_objects={'Orthogonal': Orthogonal})
 
-cols = ['unit', 'cycle', 'op_setting_1', 'op_setting_2',
-        'op_setting_3'] + [f'sensor_{i}' for i in range(1, 22)]
-features = ['cycle', 'op_setting_1', 'op_setting_2', 'op_setting_3'] + [
-    'sensor_2', 'sensor_3', 'sensor_4', 'sensor_7', 'sensor_8',
-    'sensor_11', 'sensor_15', 'sensor_17', 'sensor_20', 'sensor_21'
-]
-train_df = pd.read_csv("./CMAPSSData/train_FD001.txt", sep=' ', header=None)
-train_df.drop(columns=[26, 27], inplace=True)
-train_df.columns = cols
-scaler = MinMaxScaler()
-scaler.fit_transform(train_df[features])
+# Load scaler
+# Assuming the scaler was saved using pickle
+scaler = pickle.load(open("./model/scaler.pkl", "rb"))
 
 # Define input shape expected by model
 SEQ_LENGTH = 50
